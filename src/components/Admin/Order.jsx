@@ -82,8 +82,10 @@ function Order() {
                 <thead>
                   <tr>
                     <th>Order ID</th>
-                    <th>Status</th>
+                    <th>Order Status</th>
                     <th>Payment Method</th>
+                    <th>Payment Status</th>
+
                     <th>Total Amount</th>
                     <th>Shipping Address</th>
                     <th>Order Items</th>
@@ -97,6 +99,8 @@ function Order() {
                       <td>{order._id}</td>
                       <td>{order.orderStatus}</td>
                       <td>{order.paymentMethod}</td>
+                      <td>{order.paymentStatus}</td>
+
                       <td>${order.totalAmount}</td>
 
                       {/* Shipping Address */}
