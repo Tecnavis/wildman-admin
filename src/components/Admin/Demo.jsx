@@ -59,13 +59,15 @@ function Dishes() {
     setImage(selectedFiles);
   };
 
-  const handleImageUpload = (event, selectedColor) => {
+  const  handleImageUpload = (event, selectedColor) => {
     const files = Array.from(event.target.files);
     setImageFiles((prev) => ({
       ...prev,
       [selectedColor]: [...prev[selectedColor], ...files],
     }));
   };
+
+       
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -242,6 +244,20 @@ function Dishes() {
     const token = localStorage.getItem("token");
     const formData = new FormData();
 
+
+    // Append stock and images to the form data
+  Object.entries(imageFiles).forEach(([colorKey, files]) => {
+    files.forEach((file, index) => {
+      if (file instanceof File) {
+        formData.append(`image_${colorKey}_${index}`, file);
+      }
+    });
+    if (stocks[colorKey] !== undefined) {
+      formData.append(`stock_${colorKey}`, stocks[colorKey]);
+    }
+  });
+
+  
     // Helper function to append non-empty values
     const appendIfNotEmpty = (key, value) => {
       if (value && value !== "") {
@@ -592,6 +608,7 @@ function Dishes() {
                 type="number"
                 className="form-control"
                 placeholder="Enter New Price"
+                name="newprice"
                 value={isEditing ? getDishesById.newprice : newprice}
                 onChange={
                   isEditing
@@ -604,6 +621,7 @@ function Dishes() {
               <textarea
                 className="form-control"
                 value={isEditing ? getDishesById.description : description}
+                name="description"
                 onChange={
                   isEditing
                     ? handleUpdateChange
@@ -617,6 +635,8 @@ function Dishes() {
                 className="form-control"
                 placeholder="Enter Manufacturer"
                 value={isEditing ? getDishesById.manufacturer : manufacturer}
+                name="manufacturer"
+
                 onChange={
                   isEditing
                     ? handleUpdateChange
@@ -629,6 +649,8 @@ function Dishes() {
                 type="text"
                 className="form-control"
                 placeholder="Enter Product Care"
+                name="productcare"
+
                 value={isEditing ? getDishesById.productcare : productcare}
                 onChange={
                   isEditing
@@ -641,6 +663,7 @@ function Dishes() {
               <textarea
                 type="text"
                 className="form-control"
+                name="features"
                 value={isEditing ? getDishesById.features : features}
                 onChange={
                   isEditing

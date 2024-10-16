@@ -56,6 +56,12 @@ function SideNav() {
                     <span className="text">Orders</span>
                   </li>
                 </Link>
+                <Link to="/customer" className="link" activeClassName="active">
+                  <li className="py-3" >
+                    <span className="icon">📂</span> {/* replace with your icon */}
+                    <span className="text">Customer</span>
+                  </li>
+                </Link>
               <Link to="/banners" className="link" activeClassName="active">
                   <li className="py-3" >
                     <span className="icon">📂</span> {/* replace with your icon */}

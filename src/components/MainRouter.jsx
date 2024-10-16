@@ -14,7 +14,8 @@ import Subcategory from './Admin/Subcategory';
 import Banner from './Admin/Banner';
 import Coupon from './Admin/Coupon';
 import Color from './Admin/Color';
-import Order from './Admin/Order'
+import Order from './Admin/Order';
+import Customer from './Admin/Customer';
 
 
 
@@ -50,6 +51,8 @@ function MainRouter() {
               <Route path="/coupon" element={< Coupon/>} />
               <Route path="/colors" element={< Color/>} />
               <Route path="/orders" element={< Order/>} />
+              <Route path="/customer" element={< Customer/>} />
+
 
 
 

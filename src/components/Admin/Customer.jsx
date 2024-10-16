@@ -6,13 +6,13 @@ import Tooltip from "@mui/material/Tooltip";
 import { MdDelete } from "react-icons/md";
 
 
-function Order() {
+
+function Customer() {
   const backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);  // To manage loading state
   const [error, setError] = useState(null);  // To manage any error
   const token = localStorage.getItem('token'); 
-  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -40,7 +40,6 @@ function Order() {
     }
   }, [backendUrl, token]);
 
-
   const deleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order?")) {
       try {
@@ -59,6 +58,9 @@ function Order() {
     }
   };
   
+  // Add the delete button in the table
+  
+  
 
   return (
     <div>
@@ -67,7 +69,7 @@ function Order() {
         <div className="main-content">
           <div className="pl-3 row main-row">
             <div className="col-12 my-sm-0 my-md-5 p-3 montserrat-400" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h2><b>ORDER MANAGEMENT</b></h2>
+              <h2><b>CUSTOMER MANAGEMENT</b></h2>
             </div>
 
             {/* Handle loading, error, and no orders found */}
@@ -81,23 +83,28 @@ function Order() {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>Order ID</th>
+                    <th>User Name</th>
+                    <th>User Email</th>
+                    <th>Phone</th>
+
                     <th>Status</th>
                     <th>Payment Method</th>
                     <th>Total Amount</th>
                     <th>Shipping Address</th>
                     <th>Order Items</th>
-                    {/* <th>Actions</th> */}
-
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((order) => (
                     <tr key={order._id}>
-                      <td>{order._id}</td>
+                      <td>{order.user.username}</td>
+                      <td>{order.user.email}</td>
+                      <td>{order.user.phonenumber}</td>
+
                       <td>{order.orderStatus}</td>
                       <td>{order.paymentMethod}</td>
-                      <td>${order.totalAmount}</td>
+                      <td>Rs{order.totalAmount}</td>
 
                       {/* Shipping Address */}
                       <td>
@@ -117,14 +124,14 @@ function Order() {
                           </div>
                         ))}
                       </td>
-                      {/* <td>
+                      <td>
                         <Tooltip title="Delete">
                             <MdDelete
                             onClick={() => deleteOrder(order._id)} 
                             className="delete-icon"
                             />
                         </Tooltip>
-                        </td> */}
+                        </td>
                     </tr>
                   ))}
                 </tbody>
@@ -137,6 +144,4 @@ function Order() {
   );
 }
 
-export default Order;
-
-
+export default Customer;
