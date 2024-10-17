@@ -14,6 +14,31 @@ function Order() {
   const token = localStorage.getItem('token'); 
   
 
+  // useEffect(() => {
+  //   const fetchOrders = async () => {
+  //     try {
+  //       const response = await axios.get(`${backendUrl}/admin/getOrder`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,  // Include token for authentication
+  //         },
+  //       });
+
+  //       setOrders(response.data.orders);
+  //     } catch (error) {
+  //       setError('Error fetching orders. Please try again later.');
+  //       console.error('Error fetching orders:', error);
+  //     } finally {
+  //       setLoading(false);  // Stop loading once the request completes
+  //     }
+  //   };
+
+  //   if (token) {
+  //     fetchOrders();  // Only attempt to fetch orders if token is present
+  //   } else {
+  //     setError('No authentication token found. Please log in.');
+  //     setLoading(false);
+  //   }
+  // }, [backendUrl, token]);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -22,8 +47,12 @@ function Order() {
             Authorization: `Bearer ${token}`,  // Include token for authentication
           },
         });
-
-        setOrders(response.data.orders);
+  
+        if (response.data.orders.length === 0) {
+          setError('No orders yet.');
+        } else {
+          setOrders(response.data.orders);
+        }
       } catch (error) {
         setError('Error fetching orders. Please try again later.');
         console.error('Error fetching orders:', error);
@@ -31,7 +60,7 @@ function Order() {
         setLoading(false);  // Stop loading once the request completes
       }
     };
-
+  
     if (token) {
       fetchOrders();  // Only attempt to fetch orders if token is present
     } else {
@@ -39,7 +68,7 @@ function Order() {
       setLoading(false);
     }
   }, [backendUrl, token]);
-
+  
 
   const deleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order?")) {

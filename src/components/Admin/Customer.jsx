@@ -25,7 +25,7 @@ function Customer() {
 
         setOrders(response.data.orders);
       } catch (error) {
-        setError('Error fetching orders. Please try again later.');
+        setError('Error fetching customers since no orders are placed. Please try again later.');
         console.error('Error fetching orders:', error);
       } finally {
         setLoading(false);  // Stop loading once the request completes
