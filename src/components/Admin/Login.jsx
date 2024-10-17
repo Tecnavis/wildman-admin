@@ -116,6 +116,9 @@ const Login = () => {
               <button type="submit" className="btn w-100 mt-4" style={{backgroundColor:'black',color:'white'}}>
                 Sign in
               </button>
+              <button type="submit" className="btn w-100 mt-4">
+               Forgot password
+              </button>
             </form>
           </div>
         </div>
