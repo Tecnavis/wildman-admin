@@ -30,7 +30,7 @@ const ResetPassword = () => {
 
     try {
       // Send a request to the backend to reset the password
-      const response = await axios.post(`${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/admin/reset-password`, {
+      const response = await axios.post(`${process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL}/admin/admin-resetpassword`, {
         token,
         email,
         password: formData.password,
@@ -39,7 +39,7 @@ const ResetPassword = () => {
       if (response.data.success) {
         setMessage('Password successfully reset');
         // Optionally redirect to login page
-        navigate('/login');
+        navigate('/');
       } else {
         setMessage('Password reset failed. Please try again.');
       }
@@ -81,7 +81,7 @@ const ResetPassword = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">Reset Password</button>
+            <button type="submit" className="btn w-100" style={{backgroundColor:'black',color:'white'}}>Reset Password</button>
           </form>
 
           {message && <p className="mt-3 text-center text-danger">{message}</p>}

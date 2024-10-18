@@ -35,7 +35,7 @@ body{
 }
 .side-nav{
   height: 100vh;
-  background-color:white;
+  background-color:#6f6e6e;
   position: fixed;
   left: 0;
   display: block;
@@ -79,7 +79,7 @@ body{
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: black;
+  color:#e5e3f2;
   font-family: system-ui;
 }
 

@@ -16,6 +16,7 @@ import Coupon from './Admin/Coupon';
 import Color from './Admin/Color';
 import Order from './Admin/Order';
 import Customer from './Admin/Customer';
+import ResetPassword from './Admin/Resetpassword';
 
 
 
@@ -52,6 +53,8 @@ function MainRouter() {
               <Route path="/colors" element={< Color/>} />
               <Route path="/orders" element={< Order/>} />
               <Route path="/customer" element={< Customer/>} />
+              <Route path="/password-reset" element={< ResetPassword/>} />
+
 
 
 
