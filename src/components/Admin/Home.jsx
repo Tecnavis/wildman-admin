@@ -94,22 +94,22 @@ const Home = () => {
     };
     
     const data = {
-        labels: ['Total Items', 'Items in Cart', 'Orders', 'Customers'],
+        labels: [ 'Orders', 'Customers','Total Items', 'Items in Cart',],
         datasets: [
             {
                 label: 'Counts',
-                data: [dishCount, cartItemCount, orderCount, customerCount],
+                data: [orderCount, customerCount, dishCount, cartItemCount],
                 backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(0, 123, 255, 0.2)',  // #007bff (light blue for Total Orders)
+                    'rgba(23, 162, 184, 0.2)',  // #17a2b8 (cyan for Customers)
+                    'rgba(40, 167, 69, 0.2)',   // #28a745 (green for Total Items)
+                    'rgba(255, 193, 7, 0.2)',   // #ffc107 (yellow for Items in Cart)
                 ],
                 borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(255, 99, 132, 1)',
+                    'rgba(0, 123, 255, 1)',  // #007bff (light blue for Total Orders)
+                    'rgba(23, 162, 184, 1)',  // #17a2b8 (cyan for Customers)
+                    'rgba(40, 167, 69, 1)',   // #28a745 (green for Total Items)
+                    'rgba(255, 193, 7, 1)',   // #ffc107 (yellow for Items in Cart)
                 ],
                 borderWidth: 1,
             },
@@ -176,41 +176,62 @@ const Home = () => {
                     </Col>
                     </Row>
                     <Row>
-                        <Col md={3}>
-                            <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#007bff', color: 'white' }}>
-                                <Card.Body>
+                    <Col md={3}>
+                        <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#007bff', color: 'white' }}>
+                            <Card.Body className="d-flex align-items-center justify-content-between">
+                                <div>
                                     <Card.Title>Total Orders</Card.Title>
                                     <Card.Text>{orderCount}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={3}>
-                            <Card className="mb-4 shadow-sm " style={{ backgroundColor: '#17a2b8', color: 'white' }}>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-bag" viewBox="0 0 16 16">
+                                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                                </svg>
+                            </Card.Body>
+                        </Card>
+                    </Col>
 
-                                <Card.Body>
+                    <Col md={3}>
+                        <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#17a2b8', color: 'white' }}>
+                            <Card.Body className="d-flex align-items-center justify-content-between">
+                                <div>
                                     <Card.Title>Customers</Card.Title>
                                     <Card.Text>{customerCount}</Card.Text>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                </svg>
+                            </Card.Body>
+                        </Card>
+                    </Col>
 
-                                </Card.Body>
-                                
-                            </Card>
-                        </Col>
-                        <Col md={3}>
-                            <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#28a745', color: 'white' }}>
-                                <Card.Body>
+                    <Col md={3}>
+                        <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#28a745', color: 'white' }}>
+                            <Card.Body className="d-flex align-items-center justify-content-between">
+                                <div>
                                     <Card.Title>Total Items</Card.Title>
                                     <Card.Text>{dishCount}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={3}>
-                            <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#ffc107', color: 'white' }}>
-                                <Card.Body>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
+                                    <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/>
+                                </svg>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
+                    <Col md={3}>
+                        <Card className="mb-4 shadow-sm" style={{ backgroundColor: '#ffc107', color: 'white' }}>
+                            <Card.Body className="d-flex align-items-center justify-content-between">
+                                <div>
                                     <Card.Title>Items in Cart</Card.Title>
                                     <Card.Text>{cartItemCount}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+                                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                                </svg>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+
                     </Row>
                     <Row className="mt-5">
                         <Col>

@@ -40,7 +40,7 @@ body{
   left: 0;
   display: block;
   transition: width 0.3s; /* smooth transition */
-  overflow: hidden;
+  overflow-y: scroll;
   width:215px; /* initial width when collapsed */
   border-right: 1px solid #e4dddd;
 
@@ -70,7 +70,7 @@ body{
 }
 
 .side-nav li:hover {
-  background-color: #f4f4f4;
+  background-color: #000;
   /* background-color: #a10909;  */
   /* optional: add hover effect for list items */
 }

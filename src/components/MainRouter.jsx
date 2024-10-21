@@ -51,8 +51,8 @@ function MainRouter() {
               <Route path="/banners" element={< Banner/>} />
               <Route path="/coupon" element={< Coupon/>} />
               <Route path="/colors" element={< Color/>} />
-              <Route path="/orders" element={< Order/>} />
-              <Route path="/customer" element={< Customer/>} />
+              <Route path="/orders" element={<Order/>} />
+              <Route path="/customer" element={<Customer/>} />
               <Route path="/password-reset" element={< ResetPassword/>} />
 
 

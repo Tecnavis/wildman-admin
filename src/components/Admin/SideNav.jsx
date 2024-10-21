@@ -9,29 +9,16 @@ import { FiLogOut } from 'react-icons/fi'; // Import the logout icon
 
 
 function SideNav() {
-  const  backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
-  const navigate = useNavigate(); // Initialize navigate function
+  // const  backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
+  // const navigate = useNavigate(); // Initialize navigate function
   
   
-  const handleLogout = async () => {
-    try {
-      const response = await axios.post(`${backendUrl}/admin/logout`, {}, { withCredentials: true });
-
-      if (response.status === 200) {
-        navigate('/', { replace: true }); // Redirect to the login page
-      } else {
-        console.error('Logout failed');
-      }
-    } catch (error) {
-      console.error('An error occurred during logout', error);
-    }
-  };
 
 
   return (
     <div className="container">
       <div>
-        <div className="side-nav">
+        <div className="side-nav" >
           {/* <div className="sn1section mt-3">
             <img className="logo" src={Logs} alt="Logo" />
           </div> */}
@@ -42,9 +29,9 @@ function SideNav() {
                 <li className="py-3" >
                   {/* <span className="icon">📂</span>  */}
                   <span className="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                      <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-                    </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                    <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+                  </svg>
                   </span> 
 
                   <span className="text">Dashboard</span>
@@ -122,10 +109,7 @@ function SideNav() {
                 <FiLogOut size={20} />
                 Logout
               </button> */}
-              <button onClick={handleLogout}  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', border: 'none', backgroundColor: 'black', color: 'red', borderRadius: '4px', cursor: 'pointer' ,marginTop:'4rem',marginLeft:'3rem'}}>
-                <FiLogOut size={20} />
-                <a href='/' style={{color:'red'}}>Logout</a>
-              </button> 
+              
           </div>
         </div>
       </div>
