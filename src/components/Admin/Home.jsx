@@ -5,7 +5,7 @@ import { Bar } from 'react-chartjs-2';
 import SideNav from './SideNav';
 import { Dropdown } from 'react-bootstrap';
 import { FiLogOut } from 'react-icons/fi';
-import { useNavigate} from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 
 
 
@@ -169,7 +169,8 @@ const Home = () => {
                             <Dropdown.Menu align="right">
                                 <Dropdown.Item onClick={handleLogout}>
                                     <FiLogOut size={20} style={{ marginRight: '0.5rem' }} />
-                                    Logout
+                                    logout
+                                    {/* <Link to={'/'}>Logout</Link> */}
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
