@@ -12,6 +12,7 @@ function Order() {
   const [loading, setLoading] = useState(true);  // To manage loading state
   const [error, setError] = useState(null);  // To manage any error
   const token = localStorage.getItem('token'); 
+  const [orderStatus, setOrderStatus] = useState([]);
   
 
   // useEffect(() => {
@@ -206,7 +207,62 @@ function Order() {
                   {orders.map((order) => (
                     <tr key={order._id}>
                       <td>{order._id}</td>
-                      <td>{order.orderStatus}</td>
+                      {/* <td>{order.orderStatus}</td> */}
+                      {/* <td>
+                        <select
+                          value={order.orderStatus}
+                          onChange={async (e) => {
+                            const newStatus = e.target.value;
+                            try {
+                              await axios.put(
+                                `${backendUrl}/admin/updateOrderStatus`,
+                                { orderId: order._id, status: newStatus },
+                                { headers: { Authorization: `Bearer ${token}` } }
+                              );
+                              alert('Order status updated successfully');
+                            } catch (error) {
+                              console.error('Error updating order status:', error);
+                              alert('Error updating order status');
+                            }
+                          }}
+                        >
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Out for Delivery">Out for Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                      </td> */}
+                      <td>
+                      <select
+                        value={order.orderStatus}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value;
+                          try {
+                            // Auto-update order status when a new option is selected
+                            await axios.put(
+                              `${backendUrl}/admin/order-status`,
+                              { orderId: order._id, status: newStatus },
+                              { headers: { Authorization: `Bearer ${token}` } }
+                            );
+                            alert('Order status updated successfully');
+                            window.location.reload();
+                          } catch (error) {
+                            console.error('Error updating order status:', error);
+                            alert('Error updating order status');
+                          }
+                        }}
+                      >
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Out for Delivery">Out for Delivery</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+
+
+
                       <td>{order.paymentMethod}</td>
                       <td>{order.paymentStatus}</td>
                       <td>${order.totalAmount}</td>
