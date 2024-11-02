@@ -17,16 +17,15 @@ import Color from './Admin/Color';
 import Order from './Admin/Order';
 import Customer from './Admin/Customer';
 import ResetPassword from './Admin/Resetpassword';
-
-
-
-
-
+import CardBanners from './Admin/CardBanners';
+import Dishes from './Admin/Dishes';
 
 // import Products from './Client/Products'
 // import Aboutus from './Client/Aboutus'
 // import Viewdetails from './Client/Viewdetails'
 // import Scheme from './Client/Scheme'
+
+
 function MainRouter() {
   return (
     <div>
@@ -46,9 +45,13 @@ function MainRouter() {
               <Route path="stocks" element={<Stocks />} />
               <Route path="metalprice" element={<Metalprice />} />
               <Route path="demo" element={<Demo />} />
+              <Route path="/dishes" element={<Dishes />} />
+
               <Route path="asd" element={<Components/>} />
               <Route path="/settings" element={<Settings/>} />
               <Route path="/banners" element={< Banner/>} />
+              <Route path="/cardbanner" element={<CardBanners/>} />
+
               <Route path="/coupon" element={< Coupon/>} />
               <Route path="/colors" element={< Color/>} />
               <Route path="/orders" element={<Order/>} />
