@@ -16,7 +16,9 @@ function Dishes() {
   const [show, setShow] = useState(false);
   const [on, setOn] = useState(false);
   const [dishes, setDishes] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState([{ text: '', image: null }]);
+    console.log("description is", description)
+
   const [oldprice, setOldPrice] = useState("");
   const [newprice, setNewPrice] = useState("");
 
@@ -31,10 +33,9 @@ function Dishes() {
   const [status, setStatus] = useState("");
   const [Coverimage, setCoverimage] = useState(null);
 
-  console.log("profile is", Coverimage)
 
 
-  const [image, setImage] = useState([]);
+    const [image, setImage] = useState([]);
   const [Itemnumber, setItemnumber] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [color, setColor] = useState("");
@@ -71,7 +72,7 @@ function Dishes() {
     dishes: "",
     oldprice: "",
     newprice: "",
-    description: "",
+    description: [],
     Itemnumber: "",
     manufacturer: "",
     color: "",
@@ -84,6 +85,52 @@ function Dishes() {
     Coverimage: "",  // Add Coverimage here
 
   });
+  // const handleDescriptionChange = (index, field, value) => {
+  //   setDescription((prevDescription) => {
+  //     const updatedDescription = [...prevDescription];
+  //     updatedDescription[index] = { ...updatedDescription[index], [field]: value };
+  //     return updatedDescription;
+  //   });
+  // };
+  const handleDescriptionChange = (index, field, value) => {
+    setDescription((prev) => {
+      const newDescription = [...prev];
+      newDescription[index] = { ...newDescription[index], [field]: value };
+      return newDescription;
+    });
+  };
+  
+  const addDescriptionEntry = () => {
+    setDescription((prevDescription) => [
+      ...prevDescription,
+      { text: '', image: null }
+    ]);
+  };
+  
+  const removeDescriptionEntry = (index) => {
+    setDescription((prevDescription) => prevDescription.filter((_, i) => i !== index));
+  };
+//   const handleDescriptionChange = (index, field, value) => {
+//     const updatedDescriptions = [...description];
+//     updatedDescriptions[index][field] = value;  // Update the correct field
+//     setDescription(updatedDescriptions);
+// };
+// const handleDescriptionChange = (index, key, value) => {
+//   setDescription((prevDescription) =>
+//       prevDescription.map((desc, i) =>
+//           i === index ? { ...desc, [key]: value } : desc
+//       )
+//   );
+// };
+
+
+// const addDescriptionEntry = () => {
+//     setDescription([...description, { text: '', image: null }]);
+// };
+
+// const removeDescriptionEntry = (index) => {
+//     setDescription(description.filter((_, i) => i !== index));
+// };
 
   const handleCoverImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -247,13 +294,13 @@ const handleDetailChange = (index, field, value) => {
   const postDishes = async () => {
     const token = localStorage.getItem("token");
     const formData = new FormData();
+   
+
   
-    // Append basic details
     formData.append("dishes", dishes);
-    formData.append("description", description);
-    formData.append("category", categories); // Ensure consistency with backend key
-    formData.append("mainCategory", maincategory); // Matches backend's 'mainCategory'
-    formData.append("subcategories", subcategories); // Consistent with backend key
+    formData.append("category", categories); 
+    formData.append("mainCategory", maincategory); 
+    formData.append("subcategories", subcategories); 
     formData.append("oldprice", oldprice);
     formData.append("newprice", newprice);
     formData.append("Itemnumber", Itemnumber);
@@ -272,17 +319,26 @@ const handleDetailChange = (index, field, value) => {
     if (Coverimage) {
       formData.append("Coverimage", Coverimage);
   }
-  // Append additional details
   additionalDetails.forEach((detail, index) => {
     formData.append(`additionalDetails[${index}][heading]`, detail.heading);
     formData.append(`additionalDetails[${index}][details]`, detail.details);
 });
-  
-    // Append images and stock for each color
+
+   
+description.forEach((desc, index) => {
+  formData.append(`description[${index}][text]`, desc.text);
+  if (desc.image) {
+    formData.append(`description[${index}][image]`, desc.image);
+  }
+});
+
+
+
+
     for (const [colorKey, files] of Object.entries(imageFiles)) {
       files.forEach((file, index) => {
-        formData.append(`images_${colorKey}_${index}`, file); // Append image
-        formData.append(`stock_${colorKey}`, stocks[colorKey] || 0); // Append stock for the color
+        formData.append(`images_${colorKey}_${index}`, file); 
+        formData.append(`stock_${colorKey}`, stocks[colorKey] || 0); 
       });
     }
   
@@ -301,9 +357,9 @@ const handleDetailChange = (index, field, value) => {
   
   const handleEdit = async (id) => {
     const token = localStorage.getItem("token");
-    setShow(true); // This triggers the modal to open
+    setShow(true);
     setUid(id);
-    setIsEditing(true); // Set to true for edit mode
+    setIsEditing(true); 
 
     try {
       const response = await axios.get(`${backendUrl}/admin/product/${id}`, {
@@ -311,12 +367,12 @@ const handleDetailChange = (index, field, value) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const data = response.data.data; // Assuming the data is nested under 'data' key
+      const data = response.data.data; 
       setGetDishesById({
         dishes: data.dishes,
         oldprice: data.oldprice,
         newprice: data.newprice,
-        description: data.description,
+        description: data.description || [], // Ensure you set it correctly
         Itemnumber: data.Itemnumber,
         manufacturer: data.manufacturer,
         color: data.color,
@@ -335,17 +391,18 @@ const handleDetailChange = (index, field, value) => {
         category: data.category?._id || "",
         subcategory: data.subcategory?._id || "",
         image: data.images || {},
-        Coverimage: data.Coverimage, // Set Coverimage here
+        Coverimage: data.Coverimage, 
+        additionalDetails:data.additionalDetails
+
       });
       setMaincategory(data.category?.mainCategory?._id || "");
       setCategories(data.category?._id || "");
       setSubcategories(data.subcategory?._id || "");
 
-      // Set other state variables as needed
       setDishes(data.dishes);
       setOldPrice(data.oldprice);
       setNewPrice(data.newprice);
-      setDescription(data.description);
+      setDescription(data.description || [],);
       setItemnumber(data.Itemnumber);
       setManufacturer(data.manufacturer);
       setProductcare(data.productcare);
@@ -359,12 +416,11 @@ const handleDetailChange = (index, field, value) => {
       setHeight(data.height);
       setWeight(data.weight);
       setStatus(data.status);
-      setAdditionalDetails(data.additionalDetails || [],);
+      // setAdditionalDetails(data.additionalDetails || [],);
 
 
       
 
-      // Set image files and stocks
       setImageFiles(data.images || {});
       setStocks(
         Object.fromEntries(
@@ -378,7 +434,6 @@ const handleDetailChange = (index, field, value) => {
       console.log(err);
     }
   };
-   // Function to handle changes in additionalDetails fields
    const handleAdditionalDetailsChange = (index, field, value) => {
     setAdditionalDetails((prevDetails) => {
       const updatedDetails = [...prevDetails];
@@ -399,65 +454,117 @@ const handleDetailChange = (index, field, value) => {
     }));
   };
 
+  // const updateDishes = async () => {
+  //   const token = localStorage.getItem("token");
+  //   const formData = new FormData();
+
+  // if (getDishesById.Coverimage instanceof File) {
+  //   formData.append("Coverimage", getDishesById.Coverimage);
+  // }
+
+
+  // Object.entries(imageFiles).forEach(([colorKey, files]) => {
+  //   files.forEach((file, index) => {
+  //     if (file instanceof File) {
+  //       formData.append(`image_${colorKey}_${index}`, file);
+  //     }
+  //   });
+  //   if (stocks[colorKey] !== undefined) {
+  //     formData.append(`stock_${colorKey}`, stocks[colorKey]);
+  //   }
+  // });
+
+  
+  //   const appendIfNotEmpty = (key, value) => {
+  //     if (value && value !== "") {
+  //       formData.append(key, value);
+  //     }
+  //   };
+
+  //   appendIfNotEmpty("dishes", getDishesById.dishes);
+  //   // appendIfNotEmpty("description", getDishesById.description);
+  //   appendIfNotEmpty("oldprice", getDishesById.oldprice);
+  //   appendIfNotEmpty("newprice", getDishesById.newprice);
+  //   appendIfNotEmpty("category", getDishesById.category);
+  //   appendIfNotEmpty("subcategory", getDishesById.subcategory);
+  //   appendIfNotEmpty("Itemnumber", getDishesById.Itemnumber);
+  //   appendIfNotEmpty("productcare", getDishesById.productcare);
+  //   appendIfNotEmpty("manufacturer", getDishesById.manufacturer);
+  //   appendIfNotEmpty("features", getDishesById.features);
+
+  //   appendIfNotEmpty("purchaseprice", getDishesById.purchaseprice);
+  //   appendIfNotEmpty("gst", getDishesById.gst);
+  //   appendIfNotEmpty("Hsncode", getDishesById.Hsncode);
+  //   appendIfNotEmpty("sku", getDishesById.sku);
+  //   appendIfNotEmpty("length", getDishesById.length);
+  //   appendIfNotEmpty("width", getDishesById.width);
+  //   appendIfNotEmpty("weight", getDishesById.weight);
+  //   appendIfNotEmpty("height", getDishesById.height);
+  //   appendIfNotEmpty("status", getDishesById.status);
+    
+   
+  //   // Append description array
+  // getDishesById.description.forEach((desc, index) => {
+  //     formData.append(`description[${index}][text]`, desc.text);
+  //     if (desc.image instanceof File) {
+  //         formData.append(`description[${index}][image]`, desc.image);
+  //     } else {
+  //         formData.append(`description[${index}][image]`, desc.image);  // Existing filename
+  //     }
+  // });
+
+  // // Append additionalDetails array
+  // getDishesById.additionalDetails.forEach((detail, index) => {
+  //     formData.append(`additionalDetails[${index}][heading]`, detail.heading);
+  //     formData.append(`additionalDetails[${index}][details]`, detail.details);
+  // });
+
+
+  //   Object.entries(imageFiles).forEach(([colorKey, files]) => {
+  //     files.forEach((file, index) => {
+  //       if (file instanceof File) {
+  //         formData.append(`image_${colorKey}_${index}`, file);
+  //       }
+  //     });
+  //     if (stocks[colorKey] !== undefined) {
+  //       formData.append(`stock_${colorKey}`, stocks[colorKey]);
+  //     }
+  //   });
+
+  //   try {
+  //     const response = await axios.put(
+  //       `${backendUrl}/admin/product/${uid}`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       console.log("Product updated successfully");
+  //       window.location.reload();
+  //     } else {
+  //       console.error("Unexpected response status:", response.status);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error updating dish:", err.response?.data || err.message);
+  //   }
+  // };
+
+
   const updateDishes = async () => {
     const token = localStorage.getItem("token");
     const formData = new FormData();
-
-    // Append Cover Image only if it's a new file
-  if (getDishesById.Coverimage instanceof File) {
-    formData.append("Coverimage", getDishesById.Coverimage);
-  }
-
-
-    // Append stock and images to the form data
-  Object.entries(imageFiles).forEach(([colorKey, files]) => {
-    files.forEach((file, index) => {
-      if (file instanceof File) {
-        formData.append(`image_${colorKey}_${index}`, file);
-      }
-    });
-    if (stocks[colorKey] !== undefined) {
-      formData.append(`stock_${colorKey}`, stocks[colorKey]);
-    }
-  });
-
   
-    // Helper function to append non-empty values
-    const appendIfNotEmpty = (key, value) => {
-      if (value && value !== "") {
-        formData.append(key, value);
-      }
-    };
-
-    // Append existing details for the dish
-    appendIfNotEmpty("dishes", getDishesById.dishes);
-    appendIfNotEmpty("description", getDishesById.description);
-    appendIfNotEmpty("oldprice", getDishesById.oldprice);
-    appendIfNotEmpty("newprice", getDishesById.newprice);
-    appendIfNotEmpty("category", getDishesById.category);
-    appendIfNotEmpty("subcategory", getDishesById.subcategory);
-    appendIfNotEmpty("Itemnumber", getDishesById.Itemnumber);
-    appendIfNotEmpty("productcare", getDishesById.productcare);
-    appendIfNotEmpty("manufacturer", getDishesById.manufacturer);
-    appendIfNotEmpty("features", getDishesById.features);
-
-    appendIfNotEmpty("purchaseprice", getDishesById.purchaseprice);
-    appendIfNotEmpty("gst", getDishesById.gst);
-    appendIfNotEmpty("Hsncode", getDishesById.Hsncode);
-    appendIfNotEmpty("sku", getDishesById.sku);
-    appendIfNotEmpty("length", getDishesById.length);
-    appendIfNotEmpty("width", getDishesById.width);
-    appendIfNotEmpty("weight", getDishesById.weight);
-    appendIfNotEmpty("height", getDishesById.height);
-    appendIfNotEmpty("status", getDishesById.status);
-    
-    // getDishesById.additionalDetails.forEach((detail, i) => {
-    //   formData.append(`additionalDetails[${i}].heading`, detail.heading);
-    //   formData.append(`additionalDetails[${i}].details`, detail.details);
-    // });
-
-
-    // Loop through imageFiles and stocks to append new images and stock
+    // Append Coverimage if it's a file
+    if (getDishesById.Coverimage instanceof File) {
+      formData.append("Coverimage", getDishesById.Coverimage);
+    }
+  
+    // Append images grouped by color
     Object.entries(imageFiles).forEach(([colorKey, files]) => {
       files.forEach((file, index) => {
         if (file instanceof File) {
@@ -468,7 +575,40 @@ const handleDetailChange = (index, field, value) => {
         formData.append(`stock_${colorKey}`, stocks[colorKey]);
       }
     });
-
+  
+    // Helper function to append non-empty values
+    const appendIfNotEmpty = (key, value) => {
+      if (value && value !== "") {
+        formData.append(key, value);
+      }
+    };
+  
+    // Append basic fields
+    appendIfNotEmpty("dishes", getDishesById.dishes);
+    appendIfNotEmpty("oldprice", getDishesById.oldprice);
+    appendIfNotEmpty("newprice", getDishesById.newprice);
+    appendIfNotEmpty("category", getDishesById.category);
+    appendIfNotEmpty("subcategory", getDishesById.subcategory);
+    appendIfNotEmpty("Itemnumber", getDishesById.Itemnumber);
+    appendIfNotEmpty("productcare", getDishesById.productcare);
+    appendIfNotEmpty("manufacturer", getDishesById.manufacturer);
+    appendIfNotEmpty("features", getDishesById.features);
+  
+    // Convert arrays to JSON strings
+    formData.append("description", JSON.stringify(getDishesById.description));
+    formData.append("additionalDetails", JSON.stringify(getDishesById.additionalDetails));
+  
+    // Other fields
+    appendIfNotEmpty("purchaseprice", getDishesById.purchaseprice);
+    appendIfNotEmpty("gst", getDishesById.gst);
+    appendIfNotEmpty("Hsncode", getDishesById.Hsncode);
+    appendIfNotEmpty("sku", getDishesById.sku);
+    appendIfNotEmpty("length", getDishesById.length);
+    appendIfNotEmpty("width", getDishesById.width);
+    appendIfNotEmpty("weight", getDishesById.weight);
+    appendIfNotEmpty("height", getDishesById.height);
+    // appendIfNotEmpty("status", getDishesById.status);
+    formData.append("status", getDishesById.status);
     try {
       const response = await axios.put(
         `${backendUrl}/admin/product/${uid}`,
@@ -480,7 +620,7 @@ const handleDetailChange = (index, field, value) => {
           },
         }
       );
-
+  
       if (response.status === 200) {
         console.log("Product updated successfully");
         window.location.reload();
@@ -491,7 +631,7 @@ const handleDetailChange = (index, field, value) => {
       console.error("Error updating dish:", err.response?.data || err.message);
     }
   };
-
+  
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     const windowConfirmation = window.confirm(
@@ -731,7 +871,27 @@ const handleDetailChange = (index, field, value) => {
           {selectedItem && (
             <div>
               <p>
-                <strong>Description:</strong> {selectedItem.description}
+              {selectedItem.description && selectedItem.description.length > 0 ? (
+                <div>
+                      <strong>Description:</strong>
+                      {selectedItem.description.map((item, index) => (
+                          <div key={index} style={{ marginBottom: "10px" }}>
+                              {item.image && (
+                                  <img
+                                      src={`${backendUrl}/images/${item.image}`}
+                                      alt="Description"
+                                       className="avatar"
+                                      style={{ marginBottom: '5px' }}
+                                  />
+                              )}
+                              {item.text && <p>{item.text}</p>}
+                          </div>
+                      ))}
+                  </div>
+              ) : (
+                  <p>No description available.</p>
+              )}
+
               </p>
               <p>
                 <strong>Manufacturer:</strong> {selectedItem.manufacturer}
@@ -1023,86 +1183,151 @@ const handleDetailChange = (index, field, value) => {
               </div>
 
               
-              
-              <label>Description</label>
-              <textarea
-                className="form-control"
-                value={isEditing ? getDishesById.description : description}
-                name="description"
-                onChange={
-                  isEditing
-                    ? handleUpdateChange
-                    : (e) => setDescription(e.target.value)
-                }
-              />
+              <div>
+  <label>Description</label>
+  <button type="button" onClick={addDescriptionEntry}>
+    Add Entry
+  </button>
 
-              <div className='row'>
-                <div className='col-md-3'>
-                  <label>Length</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter Length"
-                      name="length"
-                      value={isEditing ? getDishesById.length : length}
-                      onChange={
-                        isEditing
-                          ? handleUpdateChange
-                          : (e) => setLength(e.target.value)
-                      }
-                    />
-                </div>
-                <div className='col-md-3'>
-                <label>width</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter width"
-                      name="width"
-                      value={isEditing ? getDishesById.width : width}
-                      onChange={
-                        isEditing
-                          ? handleUpdateChange
-                          : (e) => setWidth(e.target.value)
-                      }
-                    />
-                </div>
-                <div className='col-md-3'>
-                <label>Height</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter height"
-                      name="height"
-                      value={isEditing ? getDishesById.height : height}
-                      onChange={
-                        isEditing
-                          ? handleUpdateChange
-                          : (e) => setHeight(e.target.value)
-                      }
-                    />
-                </div>
-                <div className='col-md-3'>
-                <label>weight</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter weight"
-                      name="weight"
-                      value={isEditing ? getDishesById.weight : weight}
-                      onChange={
-                        isEditing
-                          ? handleUpdateChange
-                          : (e) => setWeight(e.target.value)
-                      }
-                    />
-                </div>
-              </div>
+  {description.map((desc, index) => (
+    <div key={index} style={{ marginBottom: "10px" }}>
+      <textarea
+        placeholder="Enter description text"
+        value={desc.text}
+        onChange={(e) => handleDescriptionChange(index, "text", e.target.value)}
+      />
+      <input
+        type="file"
+        onChange={(e) => handleDescriptionChange(index, "image", e.target.files[0])}
+      />
+      <button type="button" onClick={() => removeDescriptionEntry(index)}>
+        Remove Entry
+      </button>
+    </div>
+  ))}
+</div>
+
+
+              {/* <div>
+                <label>Description</label>
+                  <div>
+                      <button type="button"   
+                            style={{border: "none",
+                            backgroundColor : "white"}}  
+                           
+                            onClick={addDescriptionEntry}
+                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
+                        </svg>
+                      </button>
+                  </div>
+             
+                  {description.map((desc, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                      <textarea
+                          className="form-control"
+                          name={`description[${index}][text]`}
+                          placeholder="Enter description text"
+                          value={isEditing ? getDishesById.description[index]?.text : desc.text}
+                          onChange={
+                              isEditing
+                                  ? handleUpdateChange
+                                  : (e) => handleDescriptionChange(index, "text", e.target.value)
+                          }
+                      />
+                      <input
+                          type="file"
+                          name={`description[${index}][image]`}
+                          className="form-control mt-2"
+                          onChange={
+                              isEditing
+                                  ? handleUpdateChange
+                                  : (e) => handleDescriptionChange(index, "image", e.target.files[0])
+                          }
+                      />
+                      <button
+                          type="button"
+                          style={{ border: "none", backgroundColor: "white" }}
+                          onClick={() => removeDescriptionEntry(index)}
+                      >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-square-fill" viewBox="0 0 16 16">
+                              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708"/>
+                          </svg>
+                      </button>                  
+                  </div>
+                  ))}
+
+              </div> */}
+
+                  <div className='row'>
+                    <div className='col-md-3'>
+                      <label>Length</label>
+                        <input
+                          type="number"
+                          
+                          className="form-control"
+                          placeholder="Enter Length"
+                          name="length"
+                          value={isEditing ? getDishesById.length : length}
+                          onChange={
+                            isEditing
+                              ? handleUpdateChange
+                              : (e) => setLength(e.target.value)
+                          }
+                        />
+                    </div>
+                    <div className='col-md-3'>
+                    <label>width</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Enter width"
+                          name="width"
+                          value={isEditing ? getDishesById.width : width}
+                          onChange={
+                            isEditing
+                              ? handleUpdateChange
+                              : (e) => setWidth(e.target.value)
+                          }
+                        />
+                    </div>
+                    <div className='col-md-3'>
+                    <label>Height</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Enter height"
+                          name="height"
+                          value={isEditing ? getDishesById.height : height}
+                          onChange={
+                            isEditing
+                              ? handleUpdateChange
+                              : (e) => setHeight(e.target.value)
+                          }
+                        />
+                    </div>
+                    <div className='col-md-3'>
+                    <label>weight</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Enter weight"
+                          name="weight"
+                          value={isEditing ? getDishesById.weight : weight}
+                          onChange={
+                            isEditing
+                              ? handleUpdateChange
+                              : (e) => setWeight(e.target.value)
+                          }
+                        />
+                    </div>
+                  </div>
 
              
                         
 
-
+{/* 
               <label>Manufacturer</label>
               <textarea
                 type="text"
@@ -1131,7 +1356,7 @@ const handleDetailChange = (index, field, value) => {
                     ? handleUpdateChange
                     : (e) => setProductcare(e.target.value)
                 }
-              />
+              /> */}
 
               <label>Features</label>
               <textarea
@@ -1155,8 +1380,11 @@ const handleDetailChange = (index, field, value) => {
                       type="radio" 
                       name="status" 
                       value="active" 
-                      checked={status === 'active'} 
-                      onChange={(e) => setStatus(e.target.value)} 
+                      checked={getDishesById.status === 'active'} 
+                      onChange={
+                        isEditing
+                        ? handleUpdateChange
+                        : (e) => setStatus(e.target.value)} 
                     /> 
                     Active
                   </label>
@@ -1165,8 +1393,11 @@ const handleDetailChange = (index, field, value) => {
                       type="radio" 
                       name="status" 
                       value="inactive" 
-                      checked={status === 'inactive'} 
-                      onChange={(e) => setStatus(e.target.value)} 
+                      checked={getDishesById.status === 'inactive'} 
+                      onChange={
+                        isEditing
+                        ? handleUpdateChange
+                        :(e) => setStatus(e.target.value)} 
                     /> 
                     Inactive
                   </label>
@@ -1180,39 +1411,39 @@ const handleDetailChange = (index, field, value) => {
                   >
                       {status === 'active' ? 'Active' : 'Inactive'}
                   </span>
-              </div>
+                </div>
            
               </div>
 
               <div>
               
-              <button type="button" className="btn btn-success" onClick={handleAddDetail}>
-        Add More
-      </button>
+                <button type="button" className="btn btn-success" onClick={handleAddDetail}>
+                  Add More
+                </button>
 
-      {/* Render additional details input fields */}
-      {additionalDetails.map((detail, index) => (
-        <div key={index} className="mt-2">
-          <label>Heading</label>
-          <input
-            type="text"
-            className="form-control"
-            value={detail.heading || ""}
-            onChange={(e) =>
-              handleAdditionalDetailsChange(index, "heading", e.target.value)
-            }
-          />
+              {/* Render additional details input fields */}
+                {additionalDetails.map((detail, index) => (
+                  <div key={index} className="mt-2">
+                    <label>Heading</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={detail.heading || ""}
+                      onChange={(e) =>
+                        handleAdditionalDetailsChange(index, "heading", e.target.value)
+                      }
+                    />
 
-          <label>Details</label>
-          <textarea
-            className="form-control"
-            value={detail.details || ""}
-            onChange={(e) =>
-              handleAdditionalDetailsChange(index, "details", e.target.value)
-            }
-          />
-        </div>
-      ))}
+                    <label>Details</label>
+                    <textarea
+                      className="form-control"
+                      value={detail.details || ""}
+                      onChange={(e) =>
+                        handleAdditionalDetailsChange(index, "details", e.target.value)
+                      }
+                    />
+                  </div>
+                ))}
 
               </div>
 
@@ -1250,7 +1481,6 @@ const handleDetailChange = (index, field, value) => {
                 </select>
               </div>
 
-              {/* Display Upload and Stock Section Only When a Color is Selected */}
               {color && (
                 <div className="mb-3">
                   <div className="form-group mb-3">
@@ -1264,7 +1494,6 @@ const handleDetailChange = (index, field, value) => {
                     />
                   </div>
 
-                  {/* Stock Input Section */}
                   <div className="form-group mb-3">
                     <label htmlFor="stock" className="form-label">Stock for {color}</label>
                     <input
@@ -1279,7 +1508,6 @@ const handleDetailChange = (index, field, value) => {
                 </div>
               )}
 
-              {/* Display Uploaded Images and Stock Information for Each Color */}
               <div className="mb-3">
                 {Object.keys(imageFiles).map((colorKey) => (
                   <div key={colorKey} className="border rounded p-3 mb-3">

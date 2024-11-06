@@ -2,18 +2,14 @@
 
 
 import React from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import axios from 'axios';
-// import Logs from '../Images/bgg.png';
-import { FiLogOut } from 'react-icons/fi'; // Import the logout icon
+import { Link } from 'react-router-dom';
 
 
 function SideNav() {
-  // const  backendUrl = process.env.REACT_APP_MACHINE_TEST_1_BACKEND_URL;
-  // const navigate = useNavigate(); // Initialize navigate function
-  
-  
 
+  
+  
+ 
 
   return (
     <div className="container">
